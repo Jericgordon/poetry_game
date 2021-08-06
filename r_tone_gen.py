@@ -1,7 +1,5 @@
 import random
 
-user_input = ""
-
 
 def rid(list):
     stp_list = []
@@ -22,45 +20,23 @@ def assign_teams(students):
         teams["team2"] = current_team2
     print("Team 1 is {team1}".format(team1 = teams["team1"]))
     print("Team 2 is {team2}".format(team2 = teams["team2"]))
-
     return teams
 
 def generate_prompts():
     line = random.choice(lines)
-
     tone1 = random.choice(tones)
-
     tone2 = random.choice(tones)
-
-    player1 = random.choice(team1)
-    player2 = random.choice(team2)
-
-    print("{student} must recite the line \"{line}\" for Team 1 with the following tone: {tone}".format(student = player1,line = line,tone = tone1 ))
-    print("{student} must recite the line \"{line}\" for Team 2 with the following tone: {tone}".format(student = player2,line = line,tone = tone2 ))
     
-    
+    try:
+        player1 = team1.pop(random.choice(range(len(team1))))
+        player2 = team2.pop(random.choice(range(len(team2))))
+        print("{student} must recite the line \"{line}\" for Team 1 with the following tone: {tone}".format(student = player1,line = line,tone = tone1 ))
+        print("{student} must recite the line \"{line}\" for Team 2 with the following tone: {tone}".format(student = player2,line = line,tone = tone2 ))
+            
+    except IndexError:
+        print("All students have gone: Please start a new round")
 
-#open files for use
-
-with open("tone_list_real.txt") as tone_list:
-    tones = rid(tone_list.readlines())
-    
-with open("s_list.txt") as students_file:
-    students = rid(students_file.readlines())
-
-with open("lines_list.txt") as lines_file:
-    lines = rid(lines_file.readlines())
-
-
-#assign teams from fuction
-teams_dictionary = assign_teams(students)
-
-
-team1 = teams_dictionary["team1"]
-team2 = teams_dictionary["team2"]
-team1_score = 0
-team2_score = 0
-
+user_input = ""
 while user_input != "quit":
     user_input = input()
     if user_input == 't1':
@@ -82,8 +58,23 @@ while user_input != "quit":
     elif user_input == "score":
         print("Team 1:",team1_score)
         print("Team 2:",team2_score)
-    
-    
+    elif user_input == "new":
+        #reopen files for use
+        with open("tone_list_real.txt") as tone_list:
+            tones = rid(tone_list.readlines())
         
+        with open("s_list.txt") as students_file:
+            students = rid(students_file.readlines())
+
+        with open("lines_list.txt") as lines_file:
+            lines = rid(lines_file.readlines())
+        teams_dictionary = assign_teams(students)
+
+        #reassign teams
+        team1 = teams_dictionary["team1"]
+        team2 = teams_dictionary["team2"]
+        team1_score = 0
+        team2_score = 0
+
 
 
